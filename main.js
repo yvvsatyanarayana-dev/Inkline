@@ -1,4 +1,5 @@
 const { app, BrowserWindow, Menu, dialog, ipcMain } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 
@@ -23,9 +24,57 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, 'excalidraw-clone.html'));
   // mainWindow.webContents.openDevTools();
   createMenu();
+  mainWindow.webContents.once('did-finish-load', () => {
+    setupAutoUpdater();
+  });
 }
 
-function createMenu() {
+function setupAutoUpdater() {
+  if (!app.isPackaged) return;
+
+  autoUpdater.autoDownload = true;
+
+  const sendUpdateStatus = (status, message) => {
+    if (mainWindow && mainWindow.webContents) {
+      mainWindow.webContents.send('update-status', { status, message });
+    }
+  };
+
+  autoUpdater.on('checking-for-update', () => {
+    sendUpdateStatus('checking', 'Checking for updates...');
+  });
+
+  autoUpdater.on('update-available', (info) => {
+    sendUpdateStatus('downloading', `Update ${info.version} available. Downloading...`);
+  });
+
+  autoUpdater.on('update-not-available', () => {
+    sendUpdateStatus('up-to-date', 'No updates available.');
+  });
+
+  autoUpdater.on('error', (err) => {
+    sendUpdateStatus('error', `Update error: ${err == null ? 'Unknown error' : err.message}`);
+  });
+
+  autoUpdater.on('update-downloaded', () => {
+    sendUpdateStatus('ready', 'Update ready to install. Restart to apply.');
+    const result = dialog.showMessageBoxSync(mainWindow, {
+      type: 'question',
+      title: 'Install updates',
+      message: 'The update has been downloaded. Restart now to install?',
+      buttons: ['Restart', 'Later']
+    });
+    if (result === 0) {
+      autoUpdater.quitAndInstall();
+    }
+  });
+
+  autoUpdater.checkForUpdatesAndNotify().catch(err => {
+    sendUpdateStatus('error', `Update check failed: ${err == null ? 'Unknown error' : err.message}`);
+  });
+}
+
+function createMenu() { 
   const template = [
     {
       label: 'File',
@@ -59,6 +108,20 @@ function createMenu() {
       label: 'Help',
       submenu: [
         {
+          label: 'Check for Updates',
+          click: () => {
+            if (app.isPackaged) {
+              autoUpdater.checkForUpdates();
+            } else {
+              dialog.showMessageBox(mainWindow, {
+                type: 'info',
+                title: 'Check for Updates',
+                message: 'Update checks are available only in packaged builds.'
+              });
+            }
+          }
+        },
+        {
           label: 'About',
           click: () => {
             dialog.showMessageBox(mainWindow, {
@@ -85,6 +148,18 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit();
+});
+
+ipcMain.on('check-for-updates', (event) => {
+  if (app.isPackaged) {
+    autoUpdater.checkForUpdates().catch(err => {
+      if (event && event.sender) {
+        event.sender.send('update-status', { status: 'error', message: `Update check failed: ${err == null ? 'Unknown error' : err.message}` });
+      }
+    });
+  } else if (event && event.sender) {
+    event.sender.send('update-status', { status: 'error', message: 'Update checks are available only in packaged builds.' });
+  }
 });
 
 // IPC: Export canvas to file

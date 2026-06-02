@@ -12,7 +12,7 @@ function createWindow() {
     titleBarStyle: 'hidden',
     backgroundColor: '#f8f5f0',
     title: 'Inkline',
-    icon: path.join(__dirname, 'appicon.ico'),
+    icon: path.join(__dirname, 'deskicon.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,

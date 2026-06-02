@@ -9,23 +9,25 @@
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder",
-    "pack": "electron-packager . Inkline --platform=win32 --arch=x64 --icon=appicon.ico --overwrite",
+    "pack:win": "electron-packager . Inkline --platform=win32 --arch=x64 --icon=deskicon.ico --overwrite",
+    "pack:linux": "electron-packager . Inkline --platform=linux --arch=x64 --overwrite",
+    "pack:mac": "electron-packager . Inkline --platform=darwin --arch=x64 --icon=deskicon.icns --overwrite",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "build": {
     "appId": "com.inkline.desktop",
     "productName": "Inkline",
-    "icon": "appicon.ico",
+    "icon": "deskicon.ico",
     "files": [
       "main.js",
       "preload.js",
       "excalidraw-clone.html",
       "package.json",
-      "appicon.ico",
-      "appicon.png"
+      "deskicon.ico",
+      "deskicon.png"
     ],
     "win": {
-      "icon": "appicon.ico",
+      "icon": "deskicon.ico",
       "target": [
         "nsis",
         "zip"

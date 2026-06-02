@@ -9,6 +9,7 @@
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder",
+    "dist:win": "electron-builder --win nsis",
     "pack:win": "electron-packager . Inkline --platform=win32 --arch=x64 --icon=deskicon.ico --overwrite",
     "pack:linux": "electron-packager . Inkline --platform=linux --arch=x64 --overwrite",
     "pack:mac": "electron-packager . Inkline --platform=darwin --arch=x64 --icon=deskicon.icns --overwrite",
@@ -32,6 +33,15 @@
         "nsis",
         "zip"
       ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": false,
+      "shortcutName": "Inkline"
     }
   },
   "dependencies": {

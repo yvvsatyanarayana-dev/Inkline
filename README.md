@@ -68,4 +68,5 @@ Inkline is a polished, cross‑platform Electron desktop app for sketching, diag
     <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20215000.png" alt="Inkline screenshot 6" width="380"/></td>
   </tr>
 </table>
+
 ---

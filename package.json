@@ -64,6 +64,7 @@
   "dependencies": {
     "buffer-crc32": "^0.2.13",
     "debug": "^4.4.3",
+    "dotenv": "^16.6.1",
     "electron-updater": "^6.8.3",
     "end-of-stream": "^1.4.5",
     "env-paths": "^3.0.0",

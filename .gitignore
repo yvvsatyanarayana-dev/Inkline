@@ -1,5 +1,4 @@
-//node_modules
-//Inkline-win32-x64
+.env
 node_modules
 Inkline-win32-x64
 dist

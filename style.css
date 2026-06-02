@@ -1510,6 +1510,45 @@ body {
     box-shadow: 0 8px 24px rgba(105, 101, 219, 0.12);
 }
 
+.modal-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    width: 340px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+}
+
+.modal-message {
+    font-size: 14px;
+    color: var(--text);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+#confirm-modal .header-btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+#confirm-modal .header-btn.primary:hover {
+    background: var(--accent-hover);
+}
+
 /* --- MODAL RESPONSIVE --- */
 @media (max-width: 480px) {
 

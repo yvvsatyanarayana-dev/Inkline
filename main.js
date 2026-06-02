@@ -2,8 +2,16 @@ const { app, BrowserWindow, Menu, dialog, ipcMain } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 let mainWindow;
+// Private update configuration:
+// - GH_TOKEN: use GitHub Releases on a private repo with authenticated access.
+// - UPDATE_SERVER_URL: use a secure generic update server for private artifact hosting.
+const updateServerUrl = process.env.UPDATE_SERVER_URL;
+const isAutoUpdateConfigured = !!process.env.GH_TOKEN || !!updateServerUrl;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -31,6 +39,19 @@ function createWindow() {
 
 function setupAutoUpdater() {
   if (!app.isPackaged) return;
+  if (!isAutoUpdateConfigured) {
+    const sendUpdateStatus = (status, message) => {
+      if (mainWindow && mainWindow.webContents) {
+        mainWindow.webContents.send('update-status', { status, message });
+      }
+    };
+    sendUpdateStatus('error', 'Auto-update disabled: configure GH_TOKEN or UPDATE_SERVER_URL for private release access.');
+    return;
+  }
+
+  if (updateServerUrl) {
+    autoUpdater.setFeedURL({ provider: 'generic', url: updateServerUrl });
+  }
 
   autoUpdater.autoDownload = true;
 
@@ -151,15 +172,25 @@ app.on('window-all-closed', function () {
 });
 
 ipcMain.on('check-for-updates', (event) => {
-  if (app.isPackaged) {
-    autoUpdater.checkForUpdates().catch(err => {
-      if (event && event.sender) {
-        event.sender.send('update-status', { status: 'error', message: `Update check failed: ${err == null ? 'Unknown error' : err.message}` });
-      }
-    });
-  } else if (event && event.sender) {
-    event.sender.send('update-status', { status: 'error', message: 'Update checks are available only in packaged builds.' });
+  if (!app.isPackaged) {
+    if (event && event.sender) {
+      event.sender.send('update-status', { status: 'error', message: 'Update checks are available only in packaged builds.' });
+    }
+    return;
   }
+
+  if (!isAutoUpdateConfigured) {
+    if (event && event.sender) {
+      event.sender.send('update-status', { status: 'error', message: 'Auto-update disabled: configure GH_TOKEN or UPDATE_SERVER_URL for private release access.' });
+    }
+    return;
+  }
+
+  autoUpdater.checkForUpdates().catch(err => {
+    if (event && event.sender) {
+      event.sender.send('update-status', { status: 'error', message: `Update check failed: ${err == null ? 'Unknown error' : err.message}` });
+    }
+  });
 });
 
 // IPC: Export canvas to file

@@ -432,14 +432,13 @@
   <!-- Beautiful Custom Modal for Confirmations -->
   <div id="confirm-modal"
     style="position:fixed; inset:0; background:rgba(0,0,0,0.4); display:none; align-items:center; justify-content:center; z-index:400; backdrop-filter:blur(4px);">
-    <div
-      style="background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:24px; width:340px; box-shadow:0 20px 40px rgba(0,0,0,0.15); display:flex; flex-direction:column; gap:16px;">
-      <div style="font-weight:700; font-size:16px; color:var(--text);" id="confirm-modal-title">Confirm Action</div>
-      <div style="font-size:14px; color:var(--text);" id="confirm-modal-message">Are you sure?</div>
-      <div style="display:flex; justify-content:flex-end; gap:8px;">
-        <button id="confirm-modal-cancel" class="header-btn" style="padding:6px 12px; font-size:13px;">Cancel</button>
-        <button id="confirm-modal-confirm" class="header-btn primary"
-          style="padding:6px 12px; font-size:13px; background:#ef4444; border-color:#ef4444; color:#fff;">Confirm</button>
+    <div class="modal-card">
+      <div class="modal-title" id="confirm-modal-title">Confirm Action</div>
+      <div class="modal-message" id="confirm-modal-message">Are you sure?</div>
+      <div class="modal-actions">
+        <button id="confirm-modal-cancel" class="header-btn">Cancel</button>
+        <button id="confirm-modal-discard" class="header-btn">Don't Save</button>
+        <button id="confirm-modal-confirm" class="header-btn primary">Save</button>
       </div>
     </div>
   </div>
@@ -965,7 +964,7 @@
       };
     }
 
-    function showConfirmModal(title, message, onConfirm) {
+    function showConfirmModal(title, message, onConfirm, onCancel = null) {
       const modal = document.getElementById('confirm-modal');
       const modalTitle = document.getElementById('confirm-modal-title');
       const modalMsg = document.getElementById('confirm-modal-message');
@@ -992,6 +991,7 @@
       const handleKey = (e) => {
         if (e.key === 'Escape') {
           close();
+          if (onCancel) onCancel();
         } else if (e.key === 'Enter') {
           onConfirm();
           close();
@@ -1000,9 +1000,66 @@
 
       window.addEventListener('keydown', handleKey);
 
-      cancelBtn.onclick = close;
+      cancelBtn.onclick = () => {
+        close();
+        if (onCancel) onCancel();
+      };
       confirmBtn.onclick = () => {
         onConfirm();
+        close();
+      };
+    }
+
+    function showSaveDiscardCancelModal(title, message, onSave, onDiscard, onCancel = null) {
+      const modal = document.getElementById('confirm-modal');
+      const modalTitle = document.getElementById('confirm-modal-title');
+      const modalMsg = document.getElementById('confirm-modal-message');
+      const cancelBtn = document.getElementById('confirm-modal-cancel');
+      const discardBtn = document.getElementById('confirm-modal-discard');
+      const confirmBtn = document.getElementById('confirm-modal-confirm');
+
+      if (!modal) return;
+
+      modalTitle.textContent = title;
+      modalMsg.textContent = message;
+      modal.style.display = 'flex';
+
+      setTimeout(() => {
+        try { confirmBtn.focus(); } catch (e) {}
+      }, 50);
+
+      const close = () => {
+        modal.style.display = 'none';
+        cancelBtn.onclick = null;
+        discardBtn.onclick = null;
+        confirmBtn.onclick = null;
+        window.removeEventListener('keydown', handleKey);
+      };
+
+      const handleKey = (e) => {
+        if (e.key === 'Escape') {
+          close();
+          if (onCancel) onCancel();
+        } else if (e.key === 'Enter') {
+          onSave();
+          close();
+        }
+      };
+
+      window.addEventListener('keydown', handleKey);
+
+      cancelBtn.onclick = () => {
+        close();
+        if (onCancel) onCancel();
+      };
+
+      discardBtn.onclick = () => {
+        close();
+        onDiscard();
+      };
+
+      confirmBtn.onclick = () => {
+        onSave();
         close();
       };
     }
@@ -1306,6 +1363,15 @@
     let recordingInterval = null;
     let isRecordingAudio = false;
     let currentPlayingAudio = null;
+    let isDirty = false;
+
+    function markDirty() {
+      isDirty = true;
+    }
+
+    function clearDirty() {
+      isDirty = false;
+    }
 
     function playAudioData(base64Data) {
       if (currentPlayingAudio) {
@@ -2338,6 +2404,27 @@
     }
 
     function newCanvas() {
+      if (elements.length && isDirty) {
+        showSaveDiscardCancelModal(
+          'Unsaved changes',
+          'You have unsaved changes. What would you like to do?',
+          () => {
+            saveJSON();
+            doNewCanvas();
+          },
+          () => {
+            doNewCanvas();
+          },
+          () => {
+            // user canceled new board action
+          }
+        );
+        return;
+      }
+      doNewCanvas();
+    }
+
+    function doNewCanvas() {
       if (elements.length) saveHistory();
       elements = [];
       selectedIds.clear();
@@ -2346,6 +2433,7 @@
       scale = 1;
       updateZoom();
       updateStatus();
+      clearDirty();
       redraw();
     }
 
@@ -3794,7 +3882,6 @@
 
     function loadBoardData(data) {
       if (!data || !Array.isArray(data.elements)) throw new Error('Invalid file');
-      saveHistory();
       elements = data.elements;
       if (typeof data.viewX === 'number') viewX = data.viewX;
       if (typeof data.viewY === 'number') viewY = data.viewY;
@@ -3809,6 +3896,7 @@
       selectedIds.clear();
       updateZoom();
       updateLayersUI();
+      clearDirty();
       redraw();
     }
 
@@ -3820,9 +3908,31 @@
       a.download = 'inkline.json';
       a.click();
       URL.revokeObjectURL(a.href);
+      clearDirty();
     }
 
     function triggerLoadJSON() {
+      if (elements.length && isDirty) {
+        showSaveDiscardCancelModal(
+          'Unsaved changes',
+          'You have unsaved changes. What would you like to do?',
+          () => {
+            saveJSON();
+            triggerLoadJSONInternal();
+          },
+          () => {
+            triggerLoadJSONInternal();
+          },
+          () => {
+            // user canceled open
+          }
+        );
+        return;
+      }
+      triggerLoadJSONInternal();
+    }
+
+    function triggerLoadJSONInternal() {
       if (window.electronAPI && window.electronAPI.openJSON) {
         window.electronAPI.openJSON().then(result => {
           if (result.canceled) return;
@@ -4794,6 +4904,7 @@
       undoStack.push(JSON.stringify(elements));
       redoStack = [];
       if (undoStack.length > 80) undoStack.shift();
+      markDirty();
     }
 
     function undo() {

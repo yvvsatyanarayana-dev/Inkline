@@ -23,7 +23,10 @@
       "main.js",
       "preload.js",
       "excalidraw-clone.html",
+      "style.css",
       "package.json",
+      "appicon.ico",
+      "appicon.png",
       "deskicon.ico",
       "deskicon.png"
     ],

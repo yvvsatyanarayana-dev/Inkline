@@ -42,7 +42,8 @@
       "appicon.ico",
       "appicon.png",
       "deskicon.ico",
-      "deskicon.png"
+      "deskicon.png",
+      "setup-gh-token.ps1"
     ],
     "win": {
       "icon": "deskicon.ico",
@@ -57,8 +58,11 @@
       "allowElevation": true,
       "allowToChangeInstallationDirectory": false,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": false,
-      "shortcutName": "Inkline"
+      "createStartMenuShortcut": true,
+      "shortcutName": "Inkline",
+      "installerIcon": "deskicon.ico",
+      "uninstallerIcon": "deskicon.ico",
+      "installerHeaderIcon": "deskicon.ico"
     }
   },
   "dependencies": {

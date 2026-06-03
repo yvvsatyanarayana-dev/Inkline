@@ -143,6 +143,13 @@ function createMenu() {
           }
         },
         {
+          label: 'Setup Auto-Updates',
+          click: () => {
+            const setupScript = path.join(__dirname, 'setup-gh-token.ps1');
+            require('child_process').exec(`powershell -ExecutionPolicy Bypass -File "${setupScript}"`);
+          }
+        },
+        {
           label: 'About',
           click: () => {
             dialog.showMessageBox(mainWindow, {

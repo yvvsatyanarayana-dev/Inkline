@@ -1,6 +1,23 @@
 # Inkline
 Inkline is a polished, cross‑platform Electron desktop app for sketching, diagramming and exporting visuals. It provides shapes, freehand tools, layers, save/load (JSON), and PNG export. This repository contains product documentation and downloadable installers (Windows, Linux, macOS); source code is not published here
 
+## Screenshots
+<table>
+  <tr>
+    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214548.png" alt="Inkline screenshot 1" width="380"/></td>
+    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214754.png" alt="Inkline screenshot 2" width="380"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214935.png" alt="Inkline screenshot 3" width="380"/></td>
+    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214922.png" alt="Inkline screenshot 4" width="380"/></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214944.png" alt="Inkline screenshot 5" width="380"/></td>
+    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20215000.png" alt="Inkline screenshot 6" width="380"/></td>
+  </tr>
+</table>
+
+---
 
 ## Features
 - **Canvas & Input**
@@ -53,20 +70,3 @@ Inkline is a polished, cross‑platform Electron desktop app for sketching, diag
 
 ---
 
-## Screenshots
-<table>
-  <tr>
-    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214548.png" alt="Inkline screenshot 1" width="380"/></td>
-    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214754.png" alt="Inkline screenshot 2" width="380"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214935.png" alt="Inkline screenshot 3" width="380"/></td>
-    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214922.png" alt="Inkline screenshot 4" width="380"/></td>
-  </tr>
-  <tr>
-    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20214944.png" alt="Inkline screenshot 5" width="380"/></td>
-    <td><img src="https://github.com/yvvsatyanarayana-dev/Inkline-prd/blob/f0b834f17189d2bf8821154157f6b90371b00458/imgs/Screenshot%202026-06-02%20215000.png" alt="Inkline screenshot 6" width="380"/></td>
-  </tr>
-</table>
-
----

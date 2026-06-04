@@ -69,4 +69,15 @@ Inkline is a polished, cross‑platform Electron desktop app for sketching, diag
   - Templates, a properties panel that adapts to selection/tool context, keyboard shortcuts, and a minimal, polished UI.
 
 ---
+## Installation & Releases
 
+### 🪟 Windows (Recommended)
+Get the latest installer (`.exe`) directly from the GitHub releases page:
+
+* **[Download Inkline for Windows (v1.0.0)](https://github.com/yvvsatyanarayana-dev/Inkline-prd/releases/download/v1.0.0/Inkline.Setup.1.0.0.exe)**
+
+#### Setup Instructions:
+1. Download the **`Inkline.Setup.1.0.0.exe`** installer.
+2. Double-click the installer to launch setup.
+3. Follow the installation wizard steps.
+4. Once done, launch Inkline from your desktop shortcut or Start Menu.
